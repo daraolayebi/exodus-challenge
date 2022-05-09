@@ -7,6 +7,11 @@ function createWindow() {
     window = new BrowserWindow({
         width: 800,
         height: 600,
+        minWidth: 580,
+        minHeight: 930,
+        webPreferences: {
+            nodeIntegration: true
+        }
     });
 
     // Loads the index.html of the app at this port
