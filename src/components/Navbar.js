@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const Wrapper = styled.ul`
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     padding: 0;
     margin: 0;
@@ -14,30 +14,45 @@ const Wrapper = styled.ul`
 `;
 
 const Link = styled.li`
-  font-size: 1.5em;
+  font-size: 1em;
   text-align: center;
-  color: #535454;
   padding: 1.5em;
+  cursor: pointer;
+  position: relative;
+  transition: color 200ms ease-in-out;
 
-    &.active {
+    &.active,
+    &:hover,
+    &:focus {
         color: #fff;
         
         &:after {
             content: '';
-            display: block;
-            border-bottom: 3px solid #02C1FF;
+            display: block;    
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            width: 40%;
+            height: 100%;
+            border-bottom: 2px solid #02C1FF;
         }
     }
 `;
 
 function Navbar() {
     return (
-    <Wrapper>
-        <Link>Overview</Link>
-        <Link className="active">Earn ATOM</Link>
-        <Link>Unstake</Link>
-        <Link>Claim Reward</Link>
-    </Wrapper>
+        <header>
+            <nav>
+                <Wrapper>
+                    <Link>Overview</Link>
+                    <Link className="active">Earn ATOM</Link>
+                    <Link>Unstake</Link>
+                    <Link>Claim Reward</Link>
+                </Wrapper>
+            </nav>
+        </header>
     );
 }
 
