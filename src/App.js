@@ -2,8 +2,9 @@ import React from "react";
 import styled, { ThemeProvider } from "styled-components";
 import Heading from "./components/Heading";
 import Navbar from "./components/Navbar";
-import StakingForm from "./components/StakingForm";
-
+import StakeForm from "./components/StakeForm";
+import TransactionsTable from "./components/TransactionsTable";
+// 25282A
 const theme = {
     colors: {
         // primary: "#02C1FF",
@@ -41,7 +42,8 @@ function App() {
                 <main>
                     <Container>
                         <Heading />
-                        <StakingForm />
+                        <StakeForm />
+                        <TransactionsTable />
                     </Container>
                 </main>
             </ThemeProvider>

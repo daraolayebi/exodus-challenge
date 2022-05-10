@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import LinkIcon from './svg/LinkIcon';
 import FormTabs from './FormTabs';
+import { calculateAPY, CURRENT_BALANCE } from '../utils/index';
 
 const InnerContainer = styled.div`
     width: 60%;
@@ -14,8 +15,6 @@ const Form = styled.form`
 `;
 
 const FormFieldset = styled.fieldset`
-    display: flex;
-    justify-content: center;
     position: relative;
     margin-bottom: 3em;
 `;
@@ -44,25 +43,22 @@ const DividerIcon = styled.span`
 `;
 
 const FormGroup = styled.div`
+    width: 50%;
     display: inline-block;
-    margin: 1em;
-
-    &:first-of-type,
-    &:first-of-type input {
-        text-align: right;
-    }
 `;
 
 const FormLabel = styled.label`
     text-align: center;
-    margin-top: 3em;
+    display: block;
     font-size: .8em;
     text-transform: uppercase;
 `;
 
 const FormInput = styled.input`
-    font-size: ${({theme}) => theme.fontSizes.xl};
+    font-size: 3em;
     font-family: inherit;
+    text-align: center;
+    width: 100%;
     color: ${({theme}) => theme.colors.purple};
     padding-top: 30px;
     background-color: transparent;
@@ -96,57 +92,78 @@ const FormButton = styled.button`
     &:hover {
         opacity: .8;
     }
+
+    &:disabled {
+        opacity: .5;
+    }
 `;
 
 const FormFooter = styled.small`
     display: block;
     text-align: center;
     font-size: 12px;
-    padding-top: 10px;
+    padding-top: 20px;
 `;
 
 class StakingForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            projectedBalance: 0,
-            amountToStake: 0,
-            currentBalance: 100, 
-            currentTab: 25,
+            projectedBalance: 0.00,
+            amountToStake: 0.00,
         }
     }
 
     handleFormOnChange({ target }) {
-        console.log(target.value);
+        const { amountToStake, projectedBalance } = this.state;
         const value = target.value;
         const name = target.name;
-        this.setState({ [name]: value })
-    }
-    
-    handleFormOnSubmit(event) {
-        event.preventDefault();
-        // const { amountToStake } = this.state;
-        // let amountAsBigNumber = ethers.utils.parseEther(amount.toString());
-        // this.props.onSubmit(amountAsBigNumber);
+        this.setState({ [name]: value });
+        target.name === 'amountToStake' ? 
+            this.calculateProjectedBalance(projectedBalance) : this.calculateAmountToStake(amountToStake);
     }
 
     handleTabChange(tab) {
-        this.setState({ currentTab: tab });
+        const amount = (tab / 100) * CURRENT_BALANCE;
+        this.setState({ amountToStake: amount });
+    }
+    
+    handleFormSubmit(event) {
+        event.preventDefault();
+        console.log(this.state);
+        localStorage.setItem('stakes', JSON.stringify(this.state));
+    }
+
+    calculateAmountToStake(amount) {
+        calculateAPY(amount)
+            .then((apy) => this.setState({ amountToStake: apy }))
+            .catch((err) => {})
+    }
+
+    calculateProjectedBalance(amount) {
+        calculateAPY(amount)
+            .then((apy) => this.setState({ projectedBalance: apy }))
+            .catch((err) => {})
     }
 
     render() {
+        const { amountToStake, projectedBalance } = this.state;
+        const fieldsAreEmpty = !amountToStake && !projectedBalance;
+        const amountIsInvalid = amountToStake < 0 || amountToStake > CURRENT_BALANCE;
+
         return (
-            <Form onSubmit={() => this.handleFormOnSubmit()}>
+            <Form onSubmit={this.handleFormSubmit.bind(this)}>
                 <FormFieldset>
                     <FormGroup>
-                        <FormLabel htmlFor="amount">Enter the amount
+                        <FormLabel htmlFor="amountToStake">Enter the amount
                             <FormInput 
                                 type="number" 
-                                placeholder="0.00" 
-                                id="amount"
-                                name="amount"
-                                value={this.state.amountToStake}
-                                onChange={(e) => this.handleFormOnChange(e)} />
+                                step="0.0001"
+                                id="amountToStake"
+                                name="amountToStake"
+                                pattern="^\d*(\.\d{0,2})?$"
+                                value={amountToStake}
+                                onChange={this.handleFormOnChange.bind(this)} />
                         </FormLabel>
                     </FormGroup>
         
@@ -156,21 +173,21 @@ class StakingForm extends React.Component {
                     </DividerIcon>
                     
                     <FormGroup>
-                        <FormLabel htmlFor="balanceInOneYear">Balance in 1 year
+                        <FormLabel htmlFor="projectedBalance">Balance in 1 year
                             <FormInput 
                                 type="number" 
-                                placeholder="0.00" 
-                                id="balanceInOneYear"
-                                name="balanceInOneYear"
-                                value={this.state.projectedBalance}
-                                onChange={(e) => this.handleFormOnChange(e)}  />
+                                step="0.0001"
+                                id="projectedBalance"
+                                name="projectedBalance"
+                                value={projectedBalance}
+                                onChange={this.handleFormOnChange.bind(this)}  />
                         </FormLabel>
                     </FormGroup>
                 </FormFieldset>
 
                 <InnerContainer>
                     <FormTabs onTabChange={(tab) => this.handleTabChange(tab)} />
-                    <FormButton type="submit">Stake Atom</FormButton>
+                    <FormButton type="submit" disabled={fieldsAreEmpty || amountIsInvalid}>Stake Atom</FormButton>
                     <FormFooter>Network Fee: 0.005075 ATOM</FormFooter>
                 </InnerContainer>
             </Form>

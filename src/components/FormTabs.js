@@ -10,7 +10,7 @@ const Tabs = styled.div`
 `;
 
 const Tab = styled.button`
-    padding: 20px;
+    padding: 15px 20px;
     border: none;
     width: 100%;
     border-radius: 100px;
@@ -26,14 +26,16 @@ function FormTabs(props) {
 
     const handleTabClick = (e) => {
         e.preventDefault();
-        const tab = e.target.dataset.value;
-        console.log(tab);
-        props.onTabChange(tab);
+        const tabs = e.target.parentElement.children;
+        Array.from(tabs).forEach(tab => tab.classList.remove("active"));
+        
+        e.target.classList.add("active");
+        props.onTabChange(e.target.dataset.value);
     }
     
     return (
         <Tabs onClick={(e) => handleTabClick(e)}>
-            <Tab aria-label="25% of balance" className="active" data-value="25">25%</Tab>
+            <Tab aria-label="25% of balance" data-value="25">25%</Tab>
             <Tab aria-label="50% of balance" data-value="50">50%</Tab>
             <Tab aria-label="100% of balance" data-value="100">ALL</Tab>
         </Tabs>

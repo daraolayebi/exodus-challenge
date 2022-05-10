@@ -50,7 +50,13 @@ table {
 	border-spacing: 0;
 }
 
+input {
+	font-family: inherit;
+    font-weight: inherit;
+}
+
 button {
 	cursor: pointer;
 	font-family: inherit;
+    font-weight: inherit;
 }

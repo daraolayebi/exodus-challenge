@@ -4,7 +4,7 @@ import CosmosLogo from './svg/CosmosLogo';
 
 const HeadingWrapper = styled.div`
     text-align: center;
-    margin-top: 3em;
+    margin-top: 2em;
 `;
 
 const PageTitle = styled.h1`
