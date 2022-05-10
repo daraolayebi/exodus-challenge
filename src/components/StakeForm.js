@@ -74,7 +74,25 @@ const FormInput = styled.input`
     &:focus {
         outline: none;
     }
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    &[type=number] {
+        -moz-appearance: textfield;
+    }
 `;
+
+const FormWarning = styled.small`
+    color: ${({theme}) => theme.colors.red};
+    text-align: center;
+    display: block;
+    padding-bottom: 10px;
+`;
+
 
 const FormButton = styled.button`
     display: block;
@@ -140,9 +158,12 @@ class StakingForm extends React.Component {
     }
 
     handleProjectedValue(amount) {
-        calculateProjectedBalance(amount)
-            .then((response) => this.setState({ projectedBalance: response }))
-            .catch((err) => alert(err));
+        if (!amount) this.setState({ projectedBalance: 0.00 });
+        else {
+            calculateProjectedBalance(amount)
+                .then((response) => this.setState({ projectedBalance: response }))
+                .catch((err) => alert(err));
+        }
     }
     
     handleFormSubmit(event) {
@@ -176,10 +197,10 @@ class StakingForm extends React.Component {
                             <FormLabel htmlFor="amountToStake">Enter the amount
                                 <FormInput 
                                     type="number" 
-                                    step="0.0001"
                                     id="amountToStake"
                                     name="amountToStake"
-                                    pattern="^\d*(\.\d{0,2})?$"
+                                    step="0.01"
+                                    max={CURRENT_BALANCE}
                                     value={amountToStake}
                                     onChange={this.handleAmountChange.bind(this)} />
                             </FormLabel>
@@ -194,9 +215,9 @@ class StakingForm extends React.Component {
                             <FormLabel htmlFor="projectedBalance">Balance in 1 year
                                 <FormInput 
                                     type="number" 
-                                    step="0.0001"
                                     id="projectedBalance"
                                     name="projectedBalance"
+                                    step="0.01"
                                     value={projectedBalance}
                                     onChange={this.handleBalanceChange.bind(this)}  />
                             </FormLabel>
@@ -208,6 +229,7 @@ class StakingForm extends React.Component {
 
                         <StakesHistoryTable transactions={this.state.stakes} />
 
+                        { amountToStake > CURRENT_BALANCE && <FormWarning>The amount entered exceeds your total balance</FormWarning> }
                         <FormButton type="submit" disabled={fieldsAreEmpty || amountIsInvalid}>Stake Atom</FormButton>
                         <FormFooter>Network Fee: {NETWORK_FEE} ATOM</FormFooter>
                     </InnerContainer>

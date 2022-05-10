@@ -1,17 +1,16 @@
-export const CURRENT_BALANCE = 80;
-export const APY =  5;
+export const CURRENT_BALANCE = 100; // user has 100 ATOM to stake
+export const APY =  5; // 5% interest rate on staked amount
 export const NETWORK_FEE = 0.005075;
 
 export const calculateProjectedBalance = (amount) => {
     return new Promise((resolve, reject) => {
         const balance = (amount - NETWORK_FEE) * (1 + (APY / 100));
-        updateUserBalance(amount);
         if (isNaN(balance)) reject('Invalid value');
         resolve(balance);
     })
 }
 
-const updateUserBalance = (amount) => {
+export const updateUserBalance = (amount) => {
     const currentBalance = localStorage.getItem('currentBalance');
     localStorage.setItem('currentBalance', currentBalance - amount);
 }

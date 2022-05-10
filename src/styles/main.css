@@ -16,3 +16,7 @@ body {
     color: #5A5F63;
     background-color: #1B1F22;
 }
+
+small {
+    font-size: 12px;
+}

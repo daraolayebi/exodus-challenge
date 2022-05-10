@@ -7,15 +7,9 @@ import StakesHistoryTable from "./components/StakesHistoryTable";
 
 const theme = {
     colors: {
-        // primary: "#02C1FF",
         grey: "#5A5F63",
         purple: "#6A6B9C",
-        white: "#fff",
-    },
-    spacing: {
-        paddingSm: "1em",
-        paddingMd: "2em",
-        paddingLg: "3em",
+        red: "#f65454",
     },
     fontSizes: {
         sm: "0.8em",
