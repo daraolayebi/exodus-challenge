@@ -10,7 +10,7 @@ const Tabs = styled.div`
 `;
 
 const Tab = styled.button`
-    padding: 15px 20px;
+    padding: 20px;
     border: none;
     width: 100%;
     border-radius: 100px;

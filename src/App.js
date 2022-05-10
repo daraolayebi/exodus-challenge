@@ -3,8 +3,8 @@ import styled, { ThemeProvider } from "styled-components";
 import Heading from "./components/Heading";
 import Navbar from "./components/Navbar";
 import StakeForm from "./components/StakeForm";
-import TransactionsTable from "./components/TransactionsTable";
-// 25282A
+import StakesHistoryTable from "./components/StakesHistoryTable";
+
 const theme = {
     colors: {
         // primary: "#02C1FF",
@@ -43,7 +43,7 @@ function App() {
                     <Container>
                         <Heading />
                         <StakeForm />
-                        <TransactionsTable />
+                        <StakesHistoryTable />
                     </Container>
                 </main>
             </ThemeProvider>

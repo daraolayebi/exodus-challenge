@@ -1,11 +1,17 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import LinkIcon from './svg/LinkIcon';
 import FormTabs from './FormTabs';
-import { calculateAPY, CURRENT_BALANCE } from '../utils/index';
+import StakesHistoryTable from './StakesHistoryTable';
+import { 
+    calculateAPY, 
+    formatDateTime, 
+    generateRandomId, 
+    CURRENT_BALANCE 
+} from '../utils/index';
 
 const InnerContainer = styled.div`
-    width: 60%;
+    width: 50%;
     margin: 0 auto;
     padding: 0 20px;
 `;
@@ -111,6 +117,7 @@ class StakingForm extends React.Component {
         this.state = {
             projectedBalance: 0.00,
             amountToStake: 0.00,
+            stakes: [] || localStorage.getItem('stakes'),
         }
     }
 
@@ -127,12 +134,6 @@ class StakingForm extends React.Component {
         const amount = (tab / 100) * CURRENT_BALANCE;
         this.setState({ amountToStake: amount });
     }
-    
-    handleFormSubmit(event) {
-        event.preventDefault();
-        console.log(this.state);
-        localStorage.setItem('stakes', JSON.stringify(this.state));
-    }
 
     calculateAmountToStake(amount) {
         calculateAPY(amount)
@@ -145,6 +146,24 @@ class StakingForm extends React.Component {
             .then((apy) => this.setState({ projectedBalance: apy }))
             .catch((err) => {})
     }
+    
+    handleFormSubmit(event) {
+        event.preventDefault();
+
+        let date = Date.now();
+        const newStake = {
+            id: generateRandomId(),
+            timestamp: formatDateTime(date),
+            amount: this.state.amountToStake,
+        }
+
+        const newStakes = [...this.state.stakes, newStake];
+        localStorage.setItem('stakes', JSON.stringify(newStakes));
+        this.setState({ 
+            stakes: newStakes,
+            amountToStake: 0.00,
+        });
+    }
 
     render() {
         const { amountToStake, projectedBalance } = this.state;
@@ -152,45 +171,50 @@ class StakingForm extends React.Component {
         const amountIsInvalid = amountToStake < 0 || amountToStake > CURRENT_BALANCE;
 
         return (
-            <Form onSubmit={this.handleFormSubmit.bind(this)}>
-                <FormFieldset>
-                    <FormGroup>
-                        <FormLabel htmlFor="amountToStake">Enter the amount
-                            <FormInput 
-                                type="number" 
-                                step="0.0001"
-                                id="amountToStake"
-                                name="amountToStake"
-                                pattern="^\d*(\.\d{0,2})?$"
-                                value={amountToStake}
-                                onChange={this.handleFormOnChange.bind(this)} />
-                        </FormLabel>
-                    </FormGroup>
-        
-                    <FormGroupDivider />
-                    <DividerIcon>
-                        <LinkIcon aria-hidden="true" />
-                    </DividerIcon>
-                    
-                    <FormGroup>
-                        <FormLabel htmlFor="projectedBalance">Balance in 1 year
-                            <FormInput 
-                                type="number" 
-                                step="0.0001"
-                                id="projectedBalance"
-                                name="projectedBalance"
-                                value={projectedBalance}
-                                onChange={this.handleFormOnChange.bind(this)}  />
-                        </FormLabel>
-                    </FormGroup>
-                </FormFieldset>
+            <Fragment>
+                <Form onSubmit={this.handleFormSubmit.bind(this)}>
+                    <FormFieldset>
+                        <FormGroup>
+                            <FormLabel htmlFor="amountToStake">Enter the amount
+                                <FormInput 
+                                    type="number" 
+                                    step="0.0001"
+                                    id="amountToStake"
+                                    name="amountToStake"
+                                    pattern="^\d*(\.\d{0,2})?$"
+                                    value={amountToStake}
+                                    onChange={this.handleFormOnChange.bind(this)} />
+                            </FormLabel>
+                        </FormGroup>
+            
+                        <FormGroupDivider />
+                        <DividerIcon>
+                            <LinkIcon aria-hidden="true" />
+                        </DividerIcon>
+                        
+                        <FormGroup>
+                            <FormLabel htmlFor="projectedBalance">Balance in 1 year
+                                <FormInput 
+                                    type="number" 
+                                    step="0.0001"
+                                    id="projectedBalance"
+                                    name="projectedBalance"
+                                    value={projectedBalance}
+                                    onChange={this.handleFormOnChange.bind(this)}  />
+                            </FormLabel>
+                        </FormGroup>
+                    </FormFieldset>
 
-                <InnerContainer>
-                    <FormTabs onTabChange={(tab) => this.handleTabChange(tab)} />
-                    <FormButton type="submit" disabled={fieldsAreEmpty || amountIsInvalid}>Stake Atom</FormButton>
-                    <FormFooter>Network Fee: 0.005075 ATOM</FormFooter>
-                </InnerContainer>
-            </Form>
+                    <InnerContainer>
+                        <FormTabs onTabChange={(tab) => this.handleTabChange(tab)} />
+
+                        <StakesHistoryTable transactions={this.state.stakes} />
+
+                        <FormButton type="submit" disabled={fieldsAreEmpty || amountIsInvalid}>Stake Atom</FormButton>
+                        <FormFooter>Network Fee: 0.005075 ATOM</FormFooter>
+                    </InnerContainer>
+                </Form>
+            </Fragment>
         );
     }
 }

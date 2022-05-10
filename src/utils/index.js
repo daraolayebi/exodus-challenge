@@ -9,7 +9,23 @@ export const calculateAPY = (amount) => {
         resolve(annualPercentageYield);
         // const projectedBalance = (amount / USER_BALANCE) * 100;
         // resolve(projectedBalance);
+        // 1,000 × (1 + 12%) = $1,120
     });
 }
 
-// 1,000 × (1 + 12%) = $1,120
+export const formatDateTime = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toLocaleString("en-US", {
+        month: 'long', 
+        day: '2-digit',
+        year: 'numeric', 
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+    });
+}
+
+export const generateRandomId = () => {
+    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+}

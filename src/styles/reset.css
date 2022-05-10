@@ -60,3 +60,7 @@ button {
 	font-family: inherit;
     font-weight: inherit;
 }
+
+button:disabled {
+	cursor: initial;
+}
