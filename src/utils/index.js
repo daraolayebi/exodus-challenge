@@ -10,11 +10,6 @@ export const calculateProjectedBalance = (amount) => {
     })
 }
 
-export const updateUserBalance = (amount) => {
-    const currentBalance = localStorage.getItem('currentBalance');
-    localStorage.setItem('currentBalance', currentBalance - amount);
-}
-
 export const formatDateTime = (timestamp) => {
     const date = new Date(timestamp);
     return date.toLocaleString("en-US", {

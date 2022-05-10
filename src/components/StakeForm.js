@@ -62,7 +62,7 @@ const FormLabel = styled.label`
 `;
 
 const FormInput = styled.input`
-    font-size: 3em;
+    font-size: 3.5em;
     font-family: inherit;
     text-align: center;
     width: 100%;
@@ -193,7 +193,7 @@ class StakingForm extends React.Component {
             <Fragment>
                 <Form onSubmit={this.handleFormSubmit.bind(this)}>
                     <FormFieldset>
-                        <FormGroup>
+                        <FormGroup data-tour="stake-amount">
                             <FormLabel htmlFor="amountToStake">Enter the amount
                                 <FormInput 
                                     type="number" 
@@ -211,7 +211,7 @@ class StakingForm extends React.Component {
                             <LinkIcon aria-hidden="true" />
                         </DividerIcon>
                         
-                        <FormGroup>
+                        <FormGroup data-tour="user-projected-balance">
                             <FormLabel htmlFor="projectedBalance">Balance in 1 year
                                 <FormInput 
                                     type="number" 
@@ -230,7 +230,7 @@ class StakingForm extends React.Component {
                         <StakesHistoryTable transactions={this.state.stakes} />
 
                         { amountToStake > CURRENT_BALANCE && <FormWarning>The amount entered exceeds your total balance</FormWarning> }
-                        <FormButton type="submit" disabled={fieldsAreEmpty || amountIsInvalid}>Stake Atom</FormButton>
+                        <FormButton data-tour="stake-button" type="submit" disabled={fieldsAreEmpty || amountIsInvalid}>Stake Atom</FormButton>
                         <FormFooter>Network Fee: {NETWORK_FEE} ATOM</FormFooter>
                     </InnerContainer>
                 </Form>

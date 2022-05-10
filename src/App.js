@@ -1,9 +1,14 @@
 import React from "react";
+import Tour from 'reactour'
+import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
+
 import styled, { ThemeProvider } from "styled-components";
 import Heading from "./components/Heading";
 import Navbar from "./components/Navbar";
 import StakeForm from "./components/StakeForm";
 import StakesHistoryTable from "./components/StakesHistoryTable";
+
+import { steps } from "./utils/tutorial";
 
 const theme = {
     colors: {
@@ -29,8 +34,24 @@ const Container = styled.div`
 `;
 
 function App() {
+    const disableBody = (target) => {
+        disableBodyScroll(target);
+        localStorage.setItem('tutorialShown', true);
+    };
+    const enableBody = (target) => enableBodyScroll(target);
+
     return (
         <div>
+            <Tour
+                steps={steps}
+                isOpen={localStorage.getItem('tutorialShown') ? false : true}
+                onRequestClose={this.closeTour} 
+                showNavigation={false}
+                showNumber={false}
+                onAfterOpen={disableBody}
+                onBeforeClose={enableBody}
+                closeButtonAriaLabel="Close guided tour"
+            />
             <ThemeProvider theme={theme}>
                 <Navbar />
                 <main>

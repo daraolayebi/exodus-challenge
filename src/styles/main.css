@@ -20,3 +20,11 @@ body {
 small {
     font-size: 12px;
 }
+
+/* guided tour */
+
+#___reactour .reactour__helper {
+    background: transparent;
+    color: #fff;
+    text-align: center;
+}
