@@ -1,7 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Wrapper = styled.ul`
+const Nav = styled.nav`
+    margin-bottom: 6em;
+`;
+
+const NavWrapper = styled.ul`
     display: flex;
     justify-content: center;
     align-items: center;
@@ -14,12 +18,12 @@ const Wrapper = styled.ul`
 `;
 
 const Link = styled.li`
-  font-size: 1em;
+  font-size: .9em;
   text-align: center;
   padding: 1.5em;
   cursor: pointer;
   position: relative;
-  transition: color 200ms ease-in-out;
+  transition: all 200ms ease-in-out;
 
     &.active,
     &:hover,
@@ -44,14 +48,14 @@ const Link = styled.li`
 function Navbar() {
     return (
         <header>
-            <nav>
-                <Wrapper>
+            <Nav>
+                <NavWrapper>
                     <Link>Overview</Link>
                     <Link className="active">Earn ATOM</Link>
                     <Link>Unstake</Link>
                     <Link>Claim Reward</Link>
-                </Wrapper>
-            </nav>
+                </NavWrapper>
+            </Nav>
         </header>
     );
 }

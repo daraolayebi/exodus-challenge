@@ -16,10 +16,3 @@ body {
     color: #5A5F63;
     background-color: #1B1F22;
 }
-
-.container {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 0 20px;
-    position: relative;
-}

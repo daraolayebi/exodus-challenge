@@ -2,15 +2,15 @@ import React from 'react';
 import styled from 'styled-components';
 import CosmosLogo from './svg/CosmosLogo';
 
-const HeadingWrapper = styled.h1`
+const HeadingWrapper = styled.div`
     text-align: center;
     margin-top: 3em;
 `;
 
 const PageTitle = styled.h1`
-    font-size: 2.5em;
+    font-size: 2.3em;
     color: #fff;
-    padding-top: 30px;
+    padding-top: 2em;
 `;
 
 const PageDesc = styled.p`
