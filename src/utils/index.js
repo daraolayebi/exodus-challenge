@@ -6,7 +6,15 @@ export const calculateProjectedBalance = (amount) => {
     return new Promise((resolve, reject) => {
         const balance = (amount - NETWORK_FEE) * (1 + (APY / 100));
         if (isNaN(balance)) reject('Invalid value');
-        resolve(balance);
+        resolve(balance.toFixed(6));
+    })
+}
+
+export const calculateAmountToStake = (balance) => {
+    return new Promise((resolve, reject) => {
+        const amount = (balance / (1 + (APY / 100))) + NETWORK_FEE;
+        if (isNaN(amount)) reject('Invalid value');
+        resolve(amount.toFixed(6));
     })
 }
 
@@ -19,7 +27,7 @@ export const formatDateTime = (timestamp) => {
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit",
-        hour12: false
+        hour12: false,
     });
 }
 

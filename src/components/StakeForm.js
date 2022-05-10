@@ -7,6 +7,7 @@ import {
     CURRENT_BALANCE, 
     NETWORK_FEE,
     calculateProjectedBalance, 
+    calculateAmountToStake,
     formatDateTime, 
     generateRandomId, 
 } from '../utils/index';
@@ -142,11 +143,20 @@ class StakingForm extends React.Component {
             projectedBalance: 0,
             amountToStake: 0,
             stakes: [] || localStorage.getItem('stakes'),
+            error: '',
         }
     }
 
     handleBalanceChange(event) {
-        this.setState({ projectedBalance: event.target.value }, () => {});
+        this.setState({ projectedBalance: event.target.value }, () => {
+            calculateAmountToStake(this.state.projectedBalance)
+                .then((response) => {
+                    if(response > 0) {
+                        this.setState({ amountToStake: response })
+                    }
+                })
+                .catch((err) => alert(err));
+        });
     }
 
     handleAmountChange(event) {
@@ -234,7 +244,7 @@ class StakingForm extends React.Component {
 
                         <StakesHistoryTable transactions={this.state.stakes} />
 
-                        { amountToStake > CURRENT_BALANCE && <FormWarning>The amount entered exceeds your total balance</FormWarning> }
+                        { amountToStake > CURRENT_BALANCE && <FormWarning>{this.state.error}</FormWarning> }
                         <FormButton data-tour="stake-button" type="submit" disabled={fieldsAreEmpty || amountIsInvalid}>Stake Atom</FormButton>
                         <FormFooter>Network Fee: {NETWORK_FEE} ATOM</FormFooter>
                     </InnerContainer>
