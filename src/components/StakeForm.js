@@ -4,10 +4,11 @@ import LinkIcon from './svg/LinkIcon';
 import FormTabs from './FormTabs';
 import StakesHistoryTable from './StakesHistoryTable';
 import { 
-    calculateAPY, 
+    CURRENT_BALANCE, 
+    NETWORK_FEE,
+    calculateProjectedBalance, 
     formatDateTime, 
     generateRandomId, 
-    CURRENT_BALANCE 
 } from '../utils/index';
 
 const InnerContainer = styled.div`
@@ -121,39 +122,35 @@ class StakingForm extends React.Component {
         }
     }
 
-    handleFormOnChange({ target }) {
-        const { amountToStake, projectedBalance } = this.state;
-        const value = target.value;
-        const name = target.name;
-        this.setState({ [name]: value });
-        target.name === 'amountToStake' ? 
-            this.calculateProjectedBalance(projectedBalance) : this.calculateAmountToStake(amountToStake);
+    handleBalanceChange(event) {
+        this.setState({ projectedBalance: event.target.value }, () => {});
+    }
+
+    handleAmountChange(event) {
+        this.setState({ amountToStake: event.target.value }, () => {
+            this.handleProjectedValue(this.state.amountToStake);
+        });
     }
 
     handleTabChange(tab) {
         const amount = (tab / 100) * CURRENT_BALANCE;
-        this.setState({ amountToStake: amount });
+        this.setState({ amountToStake: amount }, () => {
+            this.handleProjectedValue(this.state.amountToStake);
+        });
     }
 
-    calculateAmountToStake(amount) {
-        calculateAPY(amount)
-            .then((apy) => this.setState({ amountToStake: apy }))
-            .catch((err) => {})
-    }
-
-    calculateProjectedBalance(amount) {
-        calculateAPY(amount)
-            .then((apy) => this.setState({ projectedBalance: apy }))
-            .catch((err) => {})
+    handleProjectedValue(amount) {
+        calculateProjectedBalance(amount)
+            .then((response) => this.setState({ projectedBalance: response }))
+            .catch((err) => alert(err));
     }
     
     handleFormSubmit(event) {
         event.preventDefault();
 
-        let date = Date.now();
         const newStake = {
             id: generateRandomId(),
-            timestamp: formatDateTime(date),
+            timestamp: formatDateTime(Date.now()),
             amount: this.state.amountToStake,
         }
 
@@ -162,6 +159,7 @@ class StakingForm extends React.Component {
         this.setState({ 
             stakes: newStakes,
             amountToStake: 0.00,
+            projectedBalance: 0.00,
         });
     }
 
@@ -183,7 +181,7 @@ class StakingForm extends React.Component {
                                     name="amountToStake"
                                     pattern="^\d*(\.\d{0,2})?$"
                                     value={amountToStake}
-                                    onChange={this.handleFormOnChange.bind(this)} />
+                                    onChange={this.handleAmountChange.bind(this)} />
                             </FormLabel>
                         </FormGroup>
             
@@ -200,7 +198,7 @@ class StakingForm extends React.Component {
                                     id="projectedBalance"
                                     name="projectedBalance"
                                     value={projectedBalance}
-                                    onChange={this.handleFormOnChange.bind(this)}  />
+                                    onChange={this.handleBalanceChange.bind(this)}  />
                             </FormLabel>
                         </FormGroup>
                     </FormFieldset>
@@ -211,7 +209,7 @@ class StakingForm extends React.Component {
                         <StakesHistoryTable transactions={this.state.stakes} />
 
                         <FormButton type="submit" disabled={fieldsAreEmpty || amountIsInvalid}>Stake Atom</FormButton>
-                        <FormFooter>Network Fee: 0.005075 ATOM</FormFooter>
+                        <FormFooter>Network Fee: {NETWORK_FEE} ATOM</FormFooter>
                     </InnerContainer>
                 </Form>
             </Fragment>

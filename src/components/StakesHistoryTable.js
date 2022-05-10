@@ -26,24 +26,20 @@ const Amount = styled.span`
     font-weight: 400;
 `;
 
-
-
 function TransactionsTable(props) {
     return (
-        <div>
-            <ListWrapper>
-                {
-                    props?.transactions?.map(transaction => {
-                        return (
-                            <ListItem key={transaction.id}>
-                                <Timestamp>{transaction.timestamp}</Timestamp>
-                                <Amount>{transaction.amount} ATOM</Amount>
-                            </ListItem>
-                        );
-                    })
-                }
-            </ListWrapper>
-        </div>
+        <ListWrapper>
+            {
+                props?.transactions?.map(transaction => {
+                    return (
+                        <ListItem key={transaction.id}>
+                            <Timestamp>{transaction.timestamp}</Timestamp>
+                            <Amount>{transaction.amount} ATOM</Amount>
+                        </ListItem>
+                    );
+                })
+            }
+        </ListWrapper>
     );
 }
 
