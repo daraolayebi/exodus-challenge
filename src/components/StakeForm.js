@@ -47,6 +47,11 @@ const DividerIcon = styled.span`
     top: 50%;
     margin-top: -12px;
     z-index: 2;
+
+    svg {
+        background-color: #1B1F22;    
+        height: 22px;
+    }
 `;
 
 const FormGroup = styled.div`
@@ -134,8 +139,8 @@ class StakingForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            projectedBalance: 0.00,
-            amountToStake: 0.00,
+            projectedBalance: 0,
+            amountToStake: 0,
             stakes: [] || localStorage.getItem('stakes'),
         }
     }
@@ -158,7 +163,7 @@ class StakingForm extends React.Component {
     }
 
     handleProjectedValue(amount) {
-        if (!amount) this.setState({ projectedBalance: 0.00 });
+        if (!amount || amount <= 0) this.setState({ projectedBalance: 0.00 });
         else {
             calculateProjectedBalance(amount)
                 .then((response) => this.setState({ projectedBalance: response }))
@@ -179,15 +184,15 @@ class StakingForm extends React.Component {
         localStorage.setItem('stakes', JSON.stringify(newStakes));
         this.setState({ 
             stakes: newStakes,
-            amountToStake: 0.00,
-            projectedBalance: 0.00,
+            amountToStake: 0,
+            projectedBalance: 0,
         });
     }
 
     render() {
         const { amountToStake, projectedBalance } = this.state;
         const fieldsAreEmpty = !amountToStake && !projectedBalance;
-        const amountIsInvalid = amountToStake < 0 || amountToStake > CURRENT_BALANCE;
+        const amountIsInvalid = amountToStake <= 0 || amountToStake > CURRENT_BALANCE;
 
         return (
             <Fragment>

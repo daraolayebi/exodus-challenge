@@ -38,18 +38,24 @@ function App() {
         disableBodyScroll(target);
         localStorage.setItem('tutorialShown', true);
     };
+
     const enableBody = (target) => enableBodyScroll(target);
+
+    const closeTour = () => {
+        localStorage.setItem('tutorialShown', true);
+    }
 
     return (
         <div>
             <Tour
                 steps={steps}
                 isOpen={localStorage.getItem('tutorialShown') ? false : true}
-                onRequestClose={this.closeTour} 
+                onRequestClose={closeTour} 
                 showNavigation={false}
                 showNumber={false}
                 onAfterOpen={disableBody}
                 onBeforeClose={enableBody}
+                rounded={5}
                 closeButtonAriaLabel="Close guided tour"
             />
             <ThemeProvider theme={theme}>
