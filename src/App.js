@@ -53,9 +53,11 @@ function App() {
                 onRequestClose={closeTour} 
                 showNavigation={false}
                 showNumber={false}
+                stepInteraction={true}
                 onAfterOpen={disableBody}
                 onBeforeClose={enableBody}
                 rounded={5}
+                maskClassName="mask"
                 closeButtonAriaLabel="Close guided tour"
             />
             <ThemeProvider theme={theme}>

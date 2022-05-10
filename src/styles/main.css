@@ -24,7 +24,12 @@ small {
 /* guided tour */
 
 #___reactour .reactour__helper {
-    background: transparent;
-    color: #fff;
+    background: #fff;
     text-align: center;
+}
+
+.mask {
+  color: rgba(0, 0, 0, 0.399);
+  opacity: 0.8;
+  border-radius: 60px;
 }
