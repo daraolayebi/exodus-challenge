@@ -10,6 +10,9 @@ export const calculateProjectedBalance = (amount) => {
     })
 }
 
+// testing again
+
+
 export const calculateAmountToStake = (balance) => {
     return new Promise((resolve, reject) => {
         const amount = (balance / (1 + (APY / 100))) + NETWORK_FEE;
